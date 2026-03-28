@@ -17,7 +17,9 @@ export default defineConfig({
   use: {
     trace: "on-first-retry",
     screenshot: "only-on-failure",
-    headless: process.env.CI ? true : false,
+    headless: false, //process.env.CI ? true : false,      // <-- open browser physically
+    viewport: { width: 1280, height: 720 },
+    ignoreHTTPSErrors: true,
   },
 
   /* Configure projects for major browsers */

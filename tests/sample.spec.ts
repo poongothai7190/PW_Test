@@ -17,7 +17,8 @@ test("@critical Sample test with annotation", async ({ page }) => {
   allure.severity("critical"); // <-- THIS sets severity in Allure reports
   //test.step() -> Step description → helps in Allure reports / debugging
   await test.step("Open application", async () => {
-    await page.goto("http://49.249.28.218:8098/");
+    // await page.goto("http://49.249.28.218:8098/");
+    await page.goto("http://49.249.28.218:809/");
   });
   await test.step("Validate title", async () => {
     const title = await page.title();

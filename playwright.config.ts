@@ -3,15 +3,12 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: false,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : 1,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ["list"],
+    ["junit", { outputFile: "results.xml" }], // <-- JUnit XML report for CI integration (e.g., Jenkins will read xml file and add success and failure testcount in email for quick understanding of test results)
     ["allure-playwright", { outputFolder: "allure-results" }],
   ],
   use: {

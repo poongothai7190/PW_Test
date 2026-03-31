@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+console.log(" summary.ts started");
 // Correct path
 const summaryPath = "./allure-report/widgets/summary.json";
 const outputFile = path.join(__dirname, "summary.txt");

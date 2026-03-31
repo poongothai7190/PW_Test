@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-// Updated path to your summary.json
+// Correct path
 const summaryPath = path.join(
   __dirname,
   "allure-report",
@@ -12,7 +12,12 @@ const outputFile = path.join(__dirname, "summary.txt");
 
 try {
   const data = JSON.parse(fs.readFileSync(summaryPath, "utf8"));
-  const { total, passed, failed, skipped } = data.statistic;
+
+  // Updated to match Allure widgets/summary.json structure
+  const total = data.total || 0;
+  const passed = data.passed || 0;
+  const failed = data.failed || 0;
+  const skipped = data.skipped || 0;
 
   const summary = `
 Test Execution Summary

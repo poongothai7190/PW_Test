@@ -8,14 +8,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 1,
   reporter: [
     ["list"],
-    ["junit", { outputFile: "junit-results/results.xml" }],
-    ["allure-playwright"],
+    ["allure-playwright", { outputFolder: "allure-results" }],
   ],
-  // reporter: [
-  //   ["list"],
-  //   ["junit", { outputFile: "results.xml" }], // <-- JUnit XML report for CI integration (e.g., Jenkins will read xml file and add success and failure testcount in email for quick understanding of test results)
-  //   ["allure-playwright", { outputFolder: "allure-results" }],
-  // ],
+
   use: {
     trace: "on-first-retry",
     screenshot: "only-on-failure",

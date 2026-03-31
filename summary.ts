@@ -2,12 +2,7 @@ import fs from "fs";
 import path from "path";
 
 // Correct path
-const summaryPath = path.join(
-  __dirname,
-  "allure-report",
-  "widgets",
-  "summary.json",
-);
+const summaryPath = "./allure-report/widgets/summary.json";
 const outputFile = path.join(__dirname, "summary.txt");
 
 try {

@@ -35,4 +35,4 @@ test("Allure with full meta data", async ({ page }) => {
   await allure.severity("critical");
 
   await page.goto("http://49.249.28.218:8098/");
-});
+}); //edited

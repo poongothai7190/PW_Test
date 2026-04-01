@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean:allure": "rimraf allure-results allure-report",
-  "install:browsers": "npx playwright install",
-  "test:json": "npx playwright test --reporter=json=playwright-report.json",
-  "test:allure": "npm run clean:allure && npm run install:browsers && npx playwright test --reporter='list,json=playwright-report.json,allure-playwright' && allure generate allure-results --clean -o allure-report"
-   
+     "clean:allure": "rimraf allure-results allure-report",
+   "test:allure": "npm run clean:allure && playwright test && allure generate allure-results --clean -o allure-report"
+
   
   },
   "keywords": [],

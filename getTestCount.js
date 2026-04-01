@@ -1,74 +1,25 @@
-console.log("Reading JSON from:", jsonPath);
-console.log("File exists?", fs.existsSync(jsonPath));
-
 const fs = require("fs");
 const path = require("path");
 
-// Path to your playwright JSON report
-const jsonPath = path.join(__dirname, "playwright-report.json");
-// Path to summary file
-const summaryPath = path.join(__dirname, "test-summary.txt");
+// Point to your JSON file
+const reportPath = path.join(__dirname, "playwright-report.json");
+
+if (!fs.existsSync(reportPath)) {
+  console.error("JSON report not found:", reportPath);
+  process.exit(1);
+}
 
 // Read JSON
-const report = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
+const report = JSON.parse(fs.readFileSync(reportPath, "utf-8"));
 
-let total = 0;
-let passed = 0;
-let failed = 0;
-let skipped = 0;
+// Playwright JSON has this structure: stats.expected, stats.unexpected, stats.skipped
+const total =
+  report.stats?.expected + report.stats?.unexpected + report.stats?.skipped;
+const passed = report.stats?.expected || 0;
+const failed = report.stats?.unexpected || 0;
+const skipped = report.stats?.skipped || 0;
 
-// Helper: process tests array
-function processTests(tests) {
-  if (!tests) return;
-  tests.forEach((test) => {
-    if (!test.results) return;
-    total += test.results.length;
-    test.results.forEach((result) => {
-      switch (result.status) {
-        case "passed":
-          passed++;
-          break;
-        case "failed":
-          failed++;
-          break;
-        case "skipped":
-          skipped++;
-          break;
-      }
-    });
-  });
-}
-
-// Helper: process specs array
-function processSpecs(specs) {
-  if (!specs) return;
-  specs.forEach((spec) => {
-    processTests(spec.tests);
-  });
-}
-
-// Helper: process suites recursively
-function processSuites(suites) {
-  if (!suites) return;
-  suites.forEach((suite) => {
-    processSpecs(suite.specs);
-    if (suite.suites && suite.suites.length > 0) {
-      processSuites(suite.suites);
-    }
-  });
-}
-
-// Start processing from top-level suites
-processSuites(report.suites || []);
-
-// Write summary
-const content = `
-TOTAL: ${total}
-PASSED: ${passed}
-FAILED: ${failed}
-SKIPPED: ${skipped}
-`.trim();
-
-fs.writeFileSync(summaryPath, content);
-console.log("Test summary generated at", summaryPath);
-console.log(content);
+console.log(`TOTAL: ${total}`);
+console.log(`PASSED: ${passed}`);
+console.log(`FAILED: ${failed}`);
+console.log(`SKIPPED: ${skipped}`);

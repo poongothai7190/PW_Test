@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean:allure": "rimraf allure-results allure-report",
+      "test:json": "npx playwright test --reporter=json",
     "test:allure": "npm run clean:allure && playwright test && allure generate allure-results --clean -o allure-report"
   },
   "keywords": [],

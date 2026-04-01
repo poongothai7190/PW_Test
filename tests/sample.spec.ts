@@ -27,12 +27,12 @@ test("@critical Sample test with annotation", async ({ page }) => {
   });
 });
 
-// test("Allure with full meta data", async ({ page }) => {
-//   await allure.epic("E-Commerce");
-//   await allure.feature("Authentication");
-//   await allure.story("User Login");
+test("Allure with full meta data", async ({ page }) => {
+  await allure.epic("E-Commerce");
+  await allure.feature("Authentication");
+  await allure.story("User Login");
 
-//   await allure.severity("critical");
+  await allure.severity("critical");
 
-//   await page.goto("http://49.249.28.218:8098/");
-// });
+  await page.goto("http://49.249.28.218:8098/");
+});

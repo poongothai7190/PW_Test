@@ -1,3 +1,6 @@
+console.log("Reading JSON from:", jsonPath);
+console.log("File exists?", fs.existsSync(jsonPath));
+
 const fs = require("fs");
 const path = require("path");
 

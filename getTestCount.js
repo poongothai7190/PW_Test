@@ -1,40 +1,55 @@
 const fs = require("fs");
+const path = require("path");
 
-const data = JSON.parse(fs.readFileSync("playwright-report.json", "utf-8"));
+// Path to the JSON report
+const jsonPath = path.join(__dirname, "playwright-report.json");
+const summaryPath = path.join(__dirname, "test-summary.txt");
 
-let total = 0;
-let passed = 0;
-let failed = 0;
-let skipped = 0;
+// Read JSON
+const report = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
 
+// Recursive function to count tests
 function countTests(suites) {
-  suites.forEach((suite) => {
-    if (suite.tests) {
-      suite.tests.forEach((test) => {
-        total++;
-        const result = test.results[0];
+  let total = 0,
+    passed = 0,
+    failed = 0,
+    skipped = 0;
 
-        if (result.status === "passed") passed++;
-        else if (result.status === "failed") failed++;
-        else if (result.status === "skipped") skipped++;
-      });
+  for (const suite of suites) {
+    if (suite.tests) {
+      total += suite.tests.length;
+      for (const test of suite.tests) {
+        // Each test may have multiple results (e.g., retries)
+        for (const result of test.results) {
+          if (result.status === "passed") passed++;
+          else if (result.status === "failed") failed++;
+          else if (result.status === "skipped") skipped++;
+        }
+      }
     }
-    if (suite.suites) {
-      countTests(suite.suites);
+    // Count recursively for nested suites
+    if (suite.suites && suite.suites.length > 0) {
+      const nested = countTests(suite.suites);
+      total += nested.total;
+      passed += nested.passed;
+      failed += nested.failed;
+      skipped += nested.skipped;
     }
-  });
+  }
+
+  return { total, passed, failed, skipped };
 }
 
-countTests(data.suites);
+// Compute counts
+const counts = countTests(report.suites || []);
 
-// Write output to file (for Jenkins email)
-const summary = `
-TOTAL: ${total}
-PASSED: ${passed}
-FAILED: ${failed}
-SKIPPED: ${skipped}
+// Write summary to file
+const content = `
+TOTAL: ${counts.total}
+PASSED: ${counts.passed}
+FAILED: ${counts.failed}
+SKIPPED: ${counts.skipped}
 `;
 
-fs.writeFileSync("test-summary.txt", summary);
-
-console.log(summary);
+fs.writeFileSync(summaryPath, content.trim());
+console.log("Test summary generated at", summaryPath);
